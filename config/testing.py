@@ -1,5 +1,3 @@
 TESTING = True
-DB_HOST = "localhost"
-DB_NAME = "test_db"
-
 # command untuk run
+SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"

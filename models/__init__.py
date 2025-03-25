@@ -1,3 +1,3 @@
-from .car import CarItem  # noqa F401
+from .car import CarItem, CarRent  # noqa F401
 
-__all__ = ["CarItem"]
+__all__ = ["CarItem", "CarRent"]
