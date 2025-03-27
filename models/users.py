@@ -11,6 +11,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     created_at = db.Column(db.DateTime, default=chrono.now)
     updated_at = db.Column(db.DateTime, default=chrono.now, onupdate=chrono.now)
+    is_staff = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"<User {self.name} ({self.email})>"

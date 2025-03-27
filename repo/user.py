@@ -131,13 +131,9 @@ class UserRepository:
         Returns:
             tuple: (User object or None, success boolean, error message or None)
         """
-        user = UserRepository.get_user_by_email(email)
-        default_error = "authentication failed"
-
+        user : User| None = UserRepository.get_user_by_email(email)
         if not user:
-            return None, False, default_error
-
+            return None
         if not user.check_password(password):
-            return None, False, default_error
-
-        return user, True, None
+            return None
+        return user

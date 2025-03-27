@@ -156,40 +156,6 @@ def test_create_user_invalid_data(client):
     assert not response.json["success"]
 
 
-def test_login_session_success(client, db):
-    """Test successful login with session authentication"""
-    # First create a user
-    client.post(
-        "/users",
-        json={
-            "name": "Session User",
-            "email": "session@example.com",
-            "password": "sessionpassword123",
-        },
-    )
-    
-    # Login with session authentication
-    response = client.post(
-        "/users/login",
-        json={
-            "email": "session@example.com",
-            "password": "sessionpassword123",
-        },
-    )
-    
-    assert response.status_code == 200
-    assert response.json["success"]
-    assert "data" in response.json
-    assert "message" in response.json["data"]
-    assert "Login successful" in response.json["data"]["message"]
-    
-    # Test accessing a protected route
-    response = client.get("/users/me")
-    assert response.status_code == 200
-    assert response.json["success"]
-    assert response.json["data"]["email"] == "session@example.com"
-    assert response.json["data"]["name"] == "Session User"
-
 
 def test_login_jwt_success(client, db):
     """Test successful login with JWT authentication"""
@@ -205,7 +171,7 @@ def test_login_jwt_success(client, db):
     
     # Login with JWT authentication
     response = client.post(
-        "/users/login?auth_type=jwt",
+        "/users/login",
         json={
             "email": "jwt@example.com",
             "password": "jwtpassword123",
@@ -223,7 +189,7 @@ def test_login_jwt_success(client, db):
     
     # Test accessing a protected route with JWT
     response = client.get(
-        "/users/me/jwt",
+        "/users/me",
         headers={"Authorization": f"Bearer {access_token}"}
     )
     assert response.status_code == 200
@@ -269,7 +235,7 @@ def test_login_invalid_credentials(client, db):
     assert not response.json["success"]
 
 
-def skiptest_jwt_token_refresh(client, db):
+def test_jwt_token_refresh(client, db):
     """Test refreshing JWT token"""
     # First create a user
     client.post(
@@ -283,7 +249,7 @@ def skiptest_jwt_token_refresh(client, db):
     
     # Login with JWT authentication
     response = client.post(
-        "/users/login?auth_type=jwt",
+        "/users/login",
         json={
             "email": "refresh@example.com",
             "password": "refreshpassword123",
@@ -306,7 +272,7 @@ def skiptest_jwt_token_refresh(client, db):
     # Test the new access token
     new_access_token = response.json["data"]["access_token"]
     response = client.get(
-        "/users/me/jwt",
+        "/users/me",
         headers={"Authorization": f"Bearer {new_access_token}"}
     )
     
@@ -315,36 +281,4 @@ def skiptest_jwt_token_refresh(client, db):
     assert response.json["data"]["email"] == "refresh@example.com"
 
 
-def test_logout(client, db):
-    """Test user logout for session authentication"""
-    # First create a user
-    client.post(
-        "/users",
-        json={
-            "name": "Logout User",
-            "email": "logout@example.com",
-            "password": "logoutpassword123",
-        },
-    )
-    
-    # Login with session authentication
-    client.post(
-        "/users/login",
-        json={
-            "email": "logout@example.com",
-            "password": "logoutpassword123",
-        },
-    )
-    
-    # Verify login was successful by accessing protected route
-    response = client.get("/users/me")
-    assert response.status_code == 200
-    
-    # Logout
-    response = client.post("/users/logout")
-    assert response.status_code == 200
-    assert response.json["success"]
-    
-    # Verify logout was successful by trying to access protected route
-    response = client.get("/users/me")
-    assert response.status_code != 200  # Should be redirected or access denied
+
