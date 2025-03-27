@@ -1,3 +1,4 @@
-from .car import CarItem, CarRent  # noqa F401
+from .car import CarItem, CarRent
+from .users import User
 
-__all__ = ["CarItem", "CarRent"]
+__all__ = ['CarItem', 'CarRent', 'User']

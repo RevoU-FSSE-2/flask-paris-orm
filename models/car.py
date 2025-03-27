@@ -24,7 +24,7 @@ class CarItem(db.Model):
     updated_at: datetime = db.Column(
         db.DateTime, default=chrono.now, onupdate=chrono.now
     )
-    
+
     def __repr__(self):
         return f"ID: {self.id} | brand: {self.brand} -> {self.license_plate}"
 
@@ -43,4 +43,4 @@ class CarRent(db.Model):
         db.DateTime, default=chrono.now, onupdate=chrono.now
     )
     hourly_rate: float = db.Column(db.Float)
-    status = db.Column(db.Enum(RentStatus), default=RentStatus.ACTIVE)
+    status: RentStatus = db.Column(db.Enum(RentStatus), default=RentStatus.ACTIVE)

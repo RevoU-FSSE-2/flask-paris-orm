@@ -37,7 +37,7 @@ def get_rented_car():
                 "customer_phone": car_rent.customer_phone,
                 "rent_start": car_rent.rent_start,
                 "rent_end": car_rent.rent_end,
-                "status": str(car_rent.status),
+                "status": car_rent.status.value,
             }
         )
     return jsonify(
